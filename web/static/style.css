@@ -1,0 +1,67 @@
+/* General Styles */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Code Editor Styles */
+.CodeMirror {
+    height: 400px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+}
+
+/* Output Area Styles */
+.output-area {
+    height: 400px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Card Styles */
+.card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Button Styles */
+.btn-primary {
+    width: 100%;
+}
+
+/* Error Modal Styles */
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .col-md-4 {
+        margin-bottom: 1rem;
+    }
+    
+    .CodeMirror {
+        height: 300px;
+    }
+    
+    .output-area {
+        height: 300px;
+    }
+} 
