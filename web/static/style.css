@@ -5,7 +5,7 @@ body {
 
 /* Code Editor Styles */
 .CodeMirror {
-    height: 400px;
+    height: 550px;
     border: 1px solid #dee2e6;
     border-radius: 4px;
     font-family: 'Fira Code', monospace;
@@ -51,6 +51,121 @@ body {
     border-bottom: 1px solid #dee2e6;
 }
 
+/* Tree Visualization Styles */
+.tree-container {
+    height: 650px;
+    overflow: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 0 0 4px 4px;
+    background-color: #ffffff;
+    position: relative;
+}
+
+.tree-container svg {
+    display: block;
+    margin: 0;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+/* Improve button styling */
+.btn-group .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Card body adjustments */
+.card-body.p-0 {
+    padding: 0 !important;
+}
+
+/* Output area adjustments */
+.output-area {
+    height: 650px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    border: none;
+    border-radius: 0;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.node circle {
+    fill: #fff;
+    stroke: #3498db;
+    stroke-width: 2px;
+    transition: all 0.3s ease;
+}
+
+.node circle:hover {
+    fill: #3498db;
+    stroke: #2980b9;
+    stroke-width: 3px;
+    cursor: pointer;
+}
+
+.node text {
+    font: 11px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-anchor: middle;
+    fill: #2c3e50;
+    pointer-events: none;
+    user-select: none;
+}
+
+.node text.node-label {
+    font-weight: 600;
+    font-size: 11px;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.node text.node-value {
+    font-size: 9px;
+    fill: #7f8c8d;
+    font-weight: 500;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.link {
+    fill: none;
+    stroke: #bdc3c7;
+    stroke-width: 1.5px;
+    transition: stroke 0.3s ease;
+}
+
+.link:hover {
+    stroke: #3498db;
+    stroke-width: 2px;
+}
+
+/* Tooltip for tree nodes */
+.tooltip {
+    position: absolute;
+    padding: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tooltip.show {
+    opacity: 1;
+}
+
+/* View Toggle Buttons */
+.btn-group .btn-check:checked + .btn {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .col-md-4 {
@@ -64,4 +179,4 @@ body {
     .output-area {
         height: 300px;
     }
-} 
+}

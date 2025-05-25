@@ -19,7 +19,7 @@
     <div class="container-fluid mt-4">
         <div class="row">
             <!-- Code Editor -->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">Python Code</h5>
@@ -29,22 +29,36 @@
                         <button id="analyze-btn" class="btn btn-primary mt-3">Analyze Code</button>
                     </div>
                 </div>
-            </div>
-
-            <!-- AST Representation -->
-            <div class="col-md-4">
+            </div>            <!-- AST Tree Visualization -->
+            <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">Abstract Syntax Tree (AST)</h5>
+                        <div class="d-flex gap-2">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <input type="radio" class="btn-check" name="ast-view" id="tree-view" autocomplete="off" checked>
+                                <label class="btn btn-outline-primary" for="tree-view">Tree View</label>
+                                
+                                <input type="radio" class="btn-check" name="ast-view" id="text-view" autocomplete="off">
+                                <label class="btn btn-outline-primary" for="text-view">Text View</label>
+                            </div>
+                            <button id="expand-all-btn" class="btn btn-sm btn-outline-success" title="Expand All Nodes">
+                                <i class="bi bi-arrows-expand"></i> Expand All
+                            </button>
+                            <button id="collapse-all-btn" class="btn btn-sm btn-outline-warning" title="Collapse All Nodes">
+                                <i class="bi bi-arrows-collapse"></i> Collapse All
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <pre id="ast-output" class="output-area"></pre>
+                    <div class="card-body p-0">
+                        <div id="ast-tree-container" class="tree-container"></div>
+                        <pre id="ast-text-output" class="output-area" style="display: none; margin: 0;"></pre>
                     </div>
                 </div>
             </div>
 
             <!-- IR Representation -->
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title mb-0">Intermediate Representation (IR)</h5>
@@ -75,6 +89,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-</html> 
+</html>
