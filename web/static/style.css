@@ -108,6 +108,24 @@ body {
     cursor: pointer;
 }
 
+/* Background rectangles for better readability */
+.label-background {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.value-background {
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.08));
+}
+
+/* Improve node circle styling */
+.node circle {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.node circle:hover {
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+}
+
 .node text {
     font: 11px 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-anchor: middle;
@@ -118,15 +136,17 @@ body {
 
 .node text.node-label {
     font-weight: 600;
-    font-size: 11px;
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    fill: #1a1a1a;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 .node text.node-value {
-    font-size: 9px;
-    fill: #7f8c8d;
+    font-size: 10px;
+    fill: #666666;
     font-weight: 500;
-    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.9);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
 }
 
 .link {
