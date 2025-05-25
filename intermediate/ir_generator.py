@@ -41,13 +41,29 @@ class IRGenerator:
     def visit_ProgramNode(self, node):
         """Convert program node to IR"""
         functions = []
+        main_body = []
+        
+        # Process all statements
         for stmt in node.statements:
-            if isinstance(stmt, (FunctionDefNode, ClassDefNode)):
+            if isinstance(stmt, FunctionDefNode):
                 result = self.visit(stmt)
                 if isinstance(result, list):
                     functions.extend(result)
                 else:
                     functions.append(result)
+            else:
+                # Add non-function statements to main body
+                ir = self.visit(stmt)
+                if isinstance(ir, list):
+                    main_body.extend(ir)
+                else:
+                    main_body.append(ir)
+        
+        # Create main function if there are any statements
+        if main_body:
+            main_function = IRFunction("main", [], main_body)
+            functions.append(main_function)
+        
         return IRProgram(functions)
 
     def visit_FunctionDefNode(self, node):
@@ -97,7 +113,28 @@ class IRGenerator:
         right = self.visit(node.right)
         result = self.generate_temp()
         
-        return IRBinaryOp(node.op, left, right, result)
+        # Handle nested binary operations
+        steps = []
+        
+        # Process left operand if it's a binary operation
+        if isinstance(left, list):
+            steps.extend(left)
+            left = left[-1].result
+        elif isinstance(left, IRBinaryOp):
+            steps.append(left)
+            left = left.result
+        
+        # Process right operand if it's a binary operation
+        if isinstance(right, list):
+            steps.extend(right)
+            right = right[-1].result
+        elif isinstance(right, IRBinaryOp):
+            steps.append(right)
+            right = right.result
+        
+        # Add the current operation
+        steps.append(IRBinaryOp(node.op, left, right, result))
+        return steps
 
     def visit_UnaryOpNode(self, node):
         """Convert unary operation to IR"""
@@ -134,12 +171,29 @@ class IRGenerator:
         """Convert assignment to IR"""
         value = self.visit(node.value)
         target = self.visit(node.target)
+        
+        # Handle complex expressions
+        if isinstance(value, list):
+            steps = value
+            steps.append(IRStore(steps[-1].result, target.name))
+            return steps
+        
         return IRStore(value, target.name)
 
     def visit_FunctionCallNode(self, node):
         """Convert function call to IR"""
         func = self.visit(node.callable)
-        args = [self.visit(arg) for arg in node.arguments]
+        args = []
+        
+        # Process arguments
+        for arg in node.arguments:
+            arg_ir = self.visit(arg)
+            if isinstance(arg_ir, list):
+                args.extend(arg_ir)
+                args.append(arg_ir[-1].result)
+            else:
+                args.append(arg_ir)
+        
         result = self.generate_temp()
         
         # Handle method calls
@@ -161,7 +215,11 @@ class IRGenerator:
         end_label = self.generate_label()
         
         # Generate IR for condition
-        cond_jump = IRCondJump(condition, true_label, false_label)
+        if isinstance(condition, list):
+            steps = condition
+            cond_jump = IRCondJump(steps[-1].result, true_label, false_label)
+        else:
+            cond_jump = IRCondJump(condition, true_label, false_label)
         
         # Generate IR for true branch
         true_block = []
@@ -182,7 +240,10 @@ class IRGenerator:
                 false_block.append(ir)
         
         # Combine all parts
-        result = [cond_jump]
+        result = []
+        if isinstance(condition, list):
+            result.extend(condition)
+        result.append(cond_jump)
         result.append(IRJump(end_label))  # Jump to end after true block
         result.extend(true_block)
         result.append(IRJump(end_label))
@@ -222,6 +283,10 @@ class IRGenerator:
         """Convert return statement to IR"""
         if node.value:
             value = self.visit(node.value)
+            if isinstance(value, list):
+                steps = value
+                steps.append(IRReturn(steps[-1].result))
+                return steps
             return IRReturn(value)
         return IRReturn()
 

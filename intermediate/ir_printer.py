@@ -36,15 +36,13 @@ class IRPrinter:
 
     def print_IRProgram(self, node):
         """Print program node"""
-        print("Program:")
-        self.indent()
         for func in node.functions:
             self.print_node(func)
-        self.dedent()
+            print()  # Add blank line between functions
 
     def print_IRFunction(self, node):
         """Print function node"""
-        print(f"{self.get_indent()}Function {node.name}({', '.join(node.params)}):")
+        print(f"Function {node.name}({', '.join(node.params)}):")
         self.indent()
         for instr in node.body:
             self.print_node(instr)
@@ -96,6 +94,8 @@ class IRPrinter:
 
     def print_IRConstant(self, node):
         """Print constant value"""
+        if isinstance(node.value, str):
+            return f'"{node.value}"'
         return str(node.value)
 
     def print_IRVariable(self, node):
