@@ -81,13 +81,11 @@ function createTreeVisualization(data) {
         .attr('height', height + margin.top + margin.bottom);
 
     g = svg.append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
-
-    // Create tree layout with better spacing
+        .attr('transform', `translate(${margin.left},${margin.top})`);    // Create tree layout with better spacing
     tree = d3.tree()
         .size([height, width])
         .separation((a, b) => {
-            return (a.parent === b.parent ? 1 : 1.2) * 1.5;
+            return (a.parent === b.parent ? 1.8 : 2.2);
         });
 
     // Initialize positions
@@ -127,10 +125,8 @@ function update(source) {
     // Compute the new tree layout
     const treeData = tree(root);
     const nodes = treeData.descendants();
-    const links = treeData.descendants().slice(1);
-
-    // Normalize for fixed-depth with better spacing
-    nodes.forEach(d => d.y = d.depth * 200);
+    const links = treeData.descendants().slice(1);    // Normalize for fixed-depth with better spacing
+    nodes.forEach(d => d.y = d.depth * 220);
 
     // Update nodes
     const node = g.selectAll('g.node')
@@ -140,35 +136,62 @@ function update(source) {
     const nodeEnter = node.enter().append('g')
         .attr('class', 'node')
         .attr('transform', d => `translate(${source.y0},${source.x0})`)
-        .on('click', click);
-
-    // Add circles for nodes
+        .on('click', click);    // Add circles for nodes
     nodeEnter.append('circle')
         .attr('r', 1e-6)
         .style('fill', d => d._children ? '#3498db' : '#fff');
 
-    // Add labels for nodes with better positioning
+    // Add background rectangles for node labels to improve readability
+    nodeEnter.append('rect')
+        .attr('class', 'label-background')
+        .attr('x', -30)
+        .attr('y', -22)
+        .attr('width', 60)
+        .attr('height', 14)
+        .attr('rx', 3)
+        .attr('ry', 3)
+        .style('fill', 'rgba(255, 255, 255, 0.9)')
+        .style('stroke', 'rgba(52, 152, 219, 0.3)')
+        .style('stroke-width', 1)
+        .style('opacity', 1e-6);
+
+    // Add background rectangles for node values to improve readability
+    nodeEnter.append('rect')
+        .attr('class', 'value-background')
+        .attr('x', -40)
+        .attr('y', 14)
+        .attr('width', 80)
+        .attr('height', 12)
+        .attr('rx', 2)
+        .attr('ry', 2)
+        .style('fill', 'rgba(248, 249, 250, 0.95)')
+        .style('stroke', 'rgba(108, 117, 125, 0.2)')
+        .style('stroke-width', 0.5)
+        .style('opacity', d => d.data.value ? 1e-6 : 0);// Add labels for nodes with better positioning
     nodeEnter.append('text')
         .attr('class', 'node-label')
-        .attr('dy', d => d.children || d._children ? '-1.2em' : '-0.5em')
+        .attr('dy', '-1.5em')
         .attr('text-anchor', 'middle')
         .text(d => {
-            // Truncate long node names
+            // Truncate long node names but keep them readable
             const name = d.data.name;
-            return name.length > 15 ? name.substring(0, 12) + '...' : name;
+            return name.length > 18 ? name.substring(0, 15) + '...' : name;
         })
         .style('fill-opacity', 1e-6);
 
-    // Add values for nodes (if available) with better positioning
+    // Add values for nodes (if available) with better positioning and styling
     nodeEnter.append('text')
         .attr('class', 'node-value')
-        .attr('dy', d => d.children || d._children ? '1.8em' : '1.2em')
+        .attr('dy', '2.2em')
         .attr('text-anchor', 'middle')
         .text(d => {
             if (d.data.value) {
                 const value = d.data.value.toString();
-                // Truncate long values
-                return value.length > 20 ? value.substring(0, 17) + '...' : value;
+                // Better truncation for values
+                if (value.length > 25) {
+                    return value.substring(0, 22) + '...';
+                }
+                return value;
             }
             return '';
         })
@@ -190,9 +213,7 @@ function update(source) {
         });
 
     // Transition nodes to their new position
-    const nodeUpdate = nodeEnter.merge(node);
-
-    nodeUpdate.transition()
+    const nodeUpdate = nodeEnter.merge(node);    nodeUpdate.transition()
         .duration(600)
         .attr('transform', d => `translate(${d.y},${d.x})`);
 
@@ -202,10 +223,15 @@ function update(source) {
         .style('stroke', d => d._children ? '#2980b9' : '#3498db')
         .attr('cursor', 'pointer');
 
-    nodeUpdate.selectAll('text')
-        .style('fill-opacity', 1);
+    // Update background rectangles
+    nodeUpdate.select('.label-background')
+        .style('opacity', 0.8);
 
-    // Transition exiting nodes to the parent's new position
+    nodeUpdate.select('.value-background')
+        .style('opacity', d => d.data.value ? 0.8 : 0);
+
+    nodeUpdate.selectAll('text')
+        .style('fill-opacity', 1);    // Transition exiting nodes to the parent's new position
     const nodeExit = node.exit().transition()
         .duration(600)
         .attr('transform', d => `translate(${source.y},${source.x})`)
@@ -213,6 +239,9 @@ function update(source) {
 
     nodeExit.select('circle')
         .attr('r', 1e-6);
+
+    nodeExit.selectAll('rect')
+        .style('opacity', 1e-6);
 
     nodeExit.selectAll('text')
         .style('fill-opacity', 1e-6);
