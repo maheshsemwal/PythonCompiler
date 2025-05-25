@@ -140,20 +140,6 @@ function update(source) {
         .attr('r', 1e-6)
         .style('fill', d => d._children ? '#3498db' : '#fff');
 
-    // Add background rectangles for node labels to improve readability
-    nodeEnter.append('rect')
-        .attr('class', 'label-background')
-        .attr('x', -30)
-        .attr('y', -22)
-        .attr('width', 60)
-        .attr('height', 14)
-        .attr('rx', 3)
-        .attr('ry', 3)
-        .style('fill', 'rgba(255, 255, 255, 0.9)')
-        .style('stroke', 'rgba(52, 152, 219, 0.3)')
-        .style('stroke-width', 1)
-        .style('opacity', 1e-6);
-
     // Add background rectangles for node values to improve readability
     nodeEnter.append('rect')
         .attr('class', 'value-background')
