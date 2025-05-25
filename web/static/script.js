@@ -12,21 +12,20 @@ const editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
 });
 
 // Set initial example code
-editor.setValue(`def hello(name):
-    print("Hello,", name)
-    return name
-
-class Person:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+editor.setValue(`def calculate():
+    x = 5 + 3 * 2
+    y = x - 4
+    print("x =" + x + ", " +  "y =" + y)
     
-    def greet(self):
-        return hello(self.name)
+    if x > 10:
+        print("x is greater than 10")
+    else:
+        print("x is not greater than 10")
+    
+    return x + y
 
-# Create a person object
-person = Person("Alice", 30)
-result = person.greet()`);
+result = calculate()
+print("Result"+  {result})`);
 
 // Tree visualization variables
 let astTreeData = null;
@@ -436,3 +435,51 @@ function addZoomPan() {
             );
         });
 }
+
+// --- Resizable Gutters for Flex Panels ---
+(function() {
+    const container = document.getElementById('main-flex-container');
+    if (!container) return;
+    const panels = [
+        document.getElementById('code-panel'),
+        document.getElementById('ast-panel'),
+        document.getElementById('ir-panel')
+    ];
+    const gutters = Array.from(container.getElementsByClassName('gutter'));
+    let isDragging = false;
+    let startX = 0;
+    let startWidths = [];
+    let activeGutter = null;
+    
+    gutters.forEach((gutter, i) => {
+        gutter.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startWidths = panels.map(panel => panel.getBoundingClientRect().width);
+            activeGutter = i;
+            document.body.style.cursor = 'col-resize';
+            e.preventDefault();
+        });
+    });
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging || activeGutter === null) return;
+        const dx = e.clientX - startX;
+        // Adjust the width of the panels to the left and right of the gutter
+        const leftPanel = panels[activeGutter];
+        const rightPanel = panels[activeGutter + 1];
+        const minWidth = 120;
+        let newLeft = Math.max(minWidth, startWidths[activeGutter] + dx);
+        let newRight = Math.max(minWidth, startWidths[activeGutter + 1] - dx);
+        leftPanel.style.flex = `none`;
+        rightPanel.style.flex = `none`;
+        leftPanel.style.width = newLeft + 'px';
+        rightPanel.style.width = newRight + 'px';
+    });
+    window.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            activeGutter = null;
+            document.body.style.cursor = '';
+        }
+    });
+})();

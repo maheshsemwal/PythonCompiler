@@ -100,4 +100,7 @@ class IRPrinter:
 
     def print_IRVariable(self, node):
         """Print variable reference"""
-        return node.name 
+        return node.name
+
+    def print_IRLabel(self, node):
+        print(f"{self.get_indent()}{node.name}:") 

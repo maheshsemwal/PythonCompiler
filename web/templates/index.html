@@ -16,56 +16,55 @@
         </div>
     </nav>
 
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <!-- Code Editor -->
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Python Code</h5>
-                    </div>
-                    <div class="card-body">
-                        <textarea id="code-editor"></textarea>
-                        <button id="analyze-btn" class="btn btn-primary mt-3">Analyze Code</button>
-                    </div>
+    <div id="main-flex-container">
+        <!-- Code Editor Panel -->
+        <div id="code-panel" class="flex-panel">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Python Code</h5>
                 </div>
-            </div>            <!-- AST Tree Visualization -->
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Abstract Syntax Tree (AST)</h5>
-                        <div class="d-flex gap-2">
-                            <div class="btn-group btn-group-sm" role="group">
-                                <input type="radio" class="btn-check" name="ast-view" id="tree-view" autocomplete="off" checked>
-                                <label class="btn btn-outline-primary" for="tree-view">Tree View</label>
-                                
-                                <input type="radio" class="btn-check" name="ast-view" id="text-view" autocomplete="off">
-                                <label class="btn btn-outline-primary" for="text-view">Text View</label>
-                            </div>
-                            <button id="expand-all-btn" class="btn btn-sm btn-outline-success" title="Expand All Nodes">
-                                <i class="bi bi-arrows-expand"></i> Expand All
-                            </button>
-                            <button id="collapse-all-btn" class="btn btn-sm btn-outline-warning" title="Collapse All Nodes">
-                                <i class="bi bi-arrows-collapse"></i> Collapse All
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div id="ast-tree-container" class="tree-container"></div>
-                        <pre id="ast-text-output" class="output-area" style="display: none; margin: 0;"></pre>
-                    </div>
+                <div class="card-body">
+                    <textarea id="code-editor"></textarea>
+                    <button id="analyze-btn" class="btn btn-primary mt-3">Analyze Code</button>
                 </div>
             </div>
-
-            <!-- IR Representation -->
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Intermediate Representation (IR)</h5>
+        </div>
+        <div class="gutter"></div>
+        <!-- AST Panel -->
+        <div id="ast-panel" class="flex-panel">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Abstract Syntax Tree (AST)</h5>
+                    <div class="d-flex gap-2">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <input type="radio" class="btn-check" name="ast-view" id="tree-view" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="tree-view">Tree View</label>
+                            <input type="radio" class="btn-check" name="ast-view" id="text-view" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="text-view">Text View</label>
+                        </div>
+                        <button id="expand-all-btn" class="btn btn-sm btn-outline-success" title="Expand All Nodes">
+                            <i class="bi bi-arrows-expand"></i> Expand All
+                        </button>
+                        <button id="collapse-all-btn" class="btn btn-sm btn-outline-warning" title="Collapse All Nodes">
+                            <i class="bi bi-arrows-collapse"></i> Collapse All
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <pre id="ir-output" class="output-area"></pre>
-                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div id="ast-tree-container" class="tree-container"></div>
+                    <pre id="ast-text-output" class="output-area" style="display: none; margin: 0;"></pre>
+                </div>
+            </div>
+        </div>
+        <div class="gutter"></div>
+        <!-- IR Panel -->
+        <div id="ir-panel" class="flex-panel">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Intermediate Representation (IR)</h5>
+                </div>
+                <div class="card-body">
+                    <pre id="ir-output" class="output-area"></pre>
                 </div>
             </div>
         </div>

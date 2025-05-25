@@ -239,17 +239,17 @@ class IRGenerator:
             else:
                 false_block.append(ir)
         
-        # Combine all parts
+        # Combine all parts with labels
         result = []
         if isinstance(condition, list):
             result.extend(condition)
         result.append(cond_jump)
-        result.append(IRJump(end_label))  # Jump to end after true block
+        result.append(IRLabel(true_label))
         result.extend(true_block)
         result.append(IRJump(end_label))
+        result.append(IRLabel(false_label))
         result.extend(false_block)
-        result.append(IRJump(end_label))
-        
+        result.append(IRLabel(end_label))
         return result
 
     def visit_WhileNode(self, node):
@@ -269,14 +269,20 @@ class IRGenerator:
             else:
                 body_ir.append(ir)
         
-        # Combine all parts
+        # Combine all parts with labels
         result = [
-            IRJump(start_label),
-            IRCondJump(condition, body_label, end_label),
-            *body_ir,
-            IRJump(start_label)
+            IRLabel(start_label),
         ]
-        
+        if isinstance(condition, list):
+            result.extend(condition)
+            cond = condition[-1].result
+        else:
+            cond = condition
+        result.append(IRCondJump(cond, body_label, end_label))
+        result.append(IRLabel(body_label))
+        result.extend(body_ir)
+        result.append(IRJump(start_label))
+        result.append(IRLabel(end_label))
         return result
 
     def visit_ReturnNode(self, node):

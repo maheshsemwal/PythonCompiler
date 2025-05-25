@@ -175,4 +175,13 @@ class IRConstructorCall(IRNode):
 
     def __str__(self):
         args_str = ", ".join(str(arg) for arg in self.args)
-        return f"{self.result} = new {self.class_name}({args_str})" 
+        return f"{self.result} = new {self.class_name}({args_str})"
+
+class IRLabel(IRNode):
+    """Label for jumps"""
+    def __init__(self, name):
+        super().__init__()
+        self.name = name
+
+    def __str__(self):
+        return f'{self.name}:' 
